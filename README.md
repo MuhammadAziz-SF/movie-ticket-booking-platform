@@ -192,4 +192,4 @@ Pull requests welcome! This architecture is a great base for:
 ## 📬 Contact
 
 Made with ❤️ by [Your Name]  
-Telegram: [@yourhandle](https://t.me/yourhandle)
+Telegram: [@yourhandle](https://t.me/sdezreg)
