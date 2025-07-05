@@ -1,0 +1,222 @@
+syntax = "proto3";
+
+package auth;
+
+
+service AuthService {
+    rpc CreateAdmin(CreateAdminReq) returns (CreateAdminRes) {}
+    rpc AdminLogin(AdminLoginReq) returns (AdminLoginRes) {}
+    rpc AdminConfirmLogin(AdminConfirmLoginReq) returns (AdminConfirmLoginRes) {}
+    rpc AdminLogout(AdminLogoutReq) returns (AdminLogoutRes) {}
+    rpc AdminFindAll(AdminFindAllReq) returns (AdminFindAllRes) {}
+    rpc AdminFindOne(AdminFindOneReq) returns (AdminFindOneRes) {}
+    rpc AdminUpdate(AdminUpdateReq) returns (AdminUpdateRes) {}
+    rpc AdminDelete(AdminDeleteReq) returns (AdminDeleteRes) {}
+
+    
+    rpc SignUpUser(SignUpUserReq) returns (SignUpUserRes) {}
+    rpc UserLogin(UserLoginReq) returns (UserLoginRes) {}
+    rpc UserConfirmLogin(UserConfirmLoginReq) returns (UserConfirmLoginRes) {}
+    rpc UserConfirmSignUp(UserConfirmSignUpReq) returns (UserConfirmSignUpRes) {}
+    rpc UserUpdate(UserUpdateReq) returns (UserUpdateRes) {}
+    rpc UserDelete(UserDeleteReq) returns (UserDeleteRes) {}
+    rpc UserFindAll(UserFindAllReq) returns (UserFindAllRes) {}
+    rpc UserFindOne(UserFindOneReq) returns (UserFindOneRes) {}
+}
+
+enum UserRole {
+  USER = 0;
+  ADMIN = 1;
+  SUPER_ADMIN = 2;
+}
+
+
+message Admin {
+    string id = 1;
+    string fullName = 2;
+    string email = 4;
+    string role = 5;
+}
+
+message User {
+    string id = 1;
+    string fullName = 2;
+    string email = 3;
+    string phone = 4;
+}
+
+
+
+message CreateAdminReq {
+    string fullName = 1;
+    string email = 2;
+    string password = 3;
+    string role = 4;
+}
+
+message CreateAdminRes {
+}
+
+
+message AdminLoginReq {
+    string email = 1;
+    string password = 2;
+}
+
+message AdminLoginRes {
+    int32 otp = 1;
+    string message = 2;
+}
+
+message AdminConfirmLoginReq {
+    string email = 1;
+    string otp = 2;
+}
+
+message AdminConfirmLoginRes {
+    bool success = 1;
+    string message = 2;
+}
+
+
+message AdminLogoutReq {}
+
+message AdminLogoutRes {
+    bool success = 1;
+    string message = 2;
+}
+
+
+message AdminFindAllReq {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+message AdminFindAllRes {
+    repeated Admin admins = 1;
+    int32 total = 2;
+    int32 page = 3;
+    int32 limit = 4;
+}
+
+
+message AdminFindOneReq {
+    string id = 1;
+}
+
+message AdminFindOneRes {
+    Admin admin = 1;
+}
+
+
+message AdminUpdateReq {
+    string id = 1;
+    optional string password = 2;
+    optional string fullName = 3;
+    optional string email = 4;
+    optional UserRole role = 5;
+}
+
+message AdminUpdateRes {
+    Admin admin = 1;
+}
+
+
+message AdminDeleteReq {
+    string id = 1;
+}
+
+message AdminDeleteRes {
+    bool success = 1;
+    string message = 2;
+}
+
+
+
+message SignUpUserReq {
+    string fullName = 1;
+    string email = 2;
+    string password = 3;
+    optional string phone = 4;
+}
+
+message SignUpUserRes {
+    int32 otp = 1;
+    string message = 2; 
+}
+
+
+message UserLoginReq {
+    string email = 1;
+    string password = 2;
+}
+
+message UserLoginRes {
+    int32 otp = 1;
+    string message = 2;
+}
+
+
+message UserConfirmLoginReq {
+    string otp = 1;
+    string email = 2;
+}
+
+message UserConfirmLoginRes {
+    bool success = 1;
+    string message = 2;
+}
+
+message UserConfirmSignUpReq {
+    string email = 1;
+    string otp = 2;
+}
+
+message UserConfirmSignUpRes {
+    bool success = 1;
+    string message = 2;
+}
+
+
+message UserUpdateReq {
+    string id = 1;
+    optional string fullName = 2;
+    optional string email = 3;
+    optional string phone = 4;
+}
+
+message UserUpdateRes {
+    User user = 1;
+}
+
+
+message UserDeleteReq {
+    string id = 1;
+}
+
+message UserDeleteRes {
+    bool success = 1;
+    string message = 2;
+}
+
+
+message UserFindAllReq {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+message UserFindAllRes {
+    repeated User users = 1;
+    int32 total = 2;
+    int32 page = 3;
+    int32 limit = 4;
+}
+
+
+message UserFindOneReq {
+    string id = 1;
+}
+
+message UserFindOneRes {
+    User user = 1;
+}
