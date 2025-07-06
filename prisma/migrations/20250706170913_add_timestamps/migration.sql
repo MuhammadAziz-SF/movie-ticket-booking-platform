@@ -110,7 +110,7 @@ CREATE TABLE "Showtime" (
 CREATE TABLE "Booking" (
     "id" TEXT NOT NULL,
     "status" "BookingStatus" NOT NULL DEFAULT 'B_PENDING',
-    "totalAmount" DECIMAL(10,2) NOT NULL,
+    "totalAmount" INTEGER NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "showtimeId" TEXT NOT NULL,
@@ -124,7 +124,7 @@ CREATE TABLE "Booking" (
 -- CreateTable
 CREATE TABLE "Ticket" (
     "id" TEXT NOT NULL,
-    "price" DECIMAL(10,2) NOT NULL,
+    "price" INTEGER NOT NULL,
     "bookingId" TEXT NOT NULL,
     "seatId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

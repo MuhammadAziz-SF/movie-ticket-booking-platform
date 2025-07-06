@@ -39,17 +39,6 @@ export interface StatusResponse {
   message: string;
 }
 
-export interface Payment {
-  id: string;
-  amount: number;
-  paymentMethod: string;
-  transactionId?: string | undefined;
-  status: PaymentStatus;
-  bookingId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Ticket {
   id: string;
   price: number;
@@ -74,12 +63,6 @@ export interface BookingFilter {
   userId?: string | undefined;
   status?: BookingStatus | undefined;
   showtimeId?: string | undefined;
-}
-
-export interface PaymentFilter {
-  bookingId?: string | undefined;
-  status?: PaymentStatus | undefined;
-  paymentMethod?: string | undefined;
 }
 
 export interface TicketFilter {
@@ -144,62 +127,6 @@ export interface FilterBookingsRequest {
 
 export interface FilterBookingsResponse {
   bookings: Booking[];
-  total: number;
-}
-
-export interface CreatePaymentRequest {
-  payment: Payment | undefined;
-}
-
-export interface CreatePaymentResponse {
-  payment: Payment | undefined;
-}
-
-export interface GetPaymentRequest {
-  id: string;
-}
-
-export interface GetPaymentResponse {
-  payment: Payment | undefined;
-}
-
-export interface UpdatePaymentRequest {
-  id: string;
-  amount?: number | undefined;
-  transactionId?: string | undefined;
-  status?: PaymentStatus | undefined;
-}
-
-export interface UpdatePaymentResponse {
-  payment: Payment | undefined;
-}
-
-export interface DeletePaymentRequest {
-  id: string;
-}
-
-export interface DeletePaymentResponse {
-  result: StatusResponse | undefined;
-}
-
-export interface ListPaymentsRequest {
-  pagination: Pagination | undefined;
-  sort: Sort | undefined;
-}
-
-export interface ListPaymentsResponse {
-  payments: Payment[];
-  total: number;
-}
-
-export interface FilterPaymentsRequest {
-  filter: PaymentFilter | undefined;
-  pagination: Pagination | undefined;
-  sort: Sort | undefined;
-}
-
-export interface FilterPaymentsResponse {
-  payments: Payment[];
   total: number;
 }
 
@@ -273,18 +200,6 @@ export interface BookingServiceClient {
 
   filterBookings(request: FilterBookingsRequest): Observable<FilterBookingsResponse>;
 
-  createPayment(request: CreatePaymentRequest): Observable<CreatePaymentResponse>;
-
-  getPayment(request: GetPaymentRequest): Observable<GetPaymentResponse>;
-
-  updatePayment(request: UpdatePaymentRequest): Observable<UpdatePaymentResponse>;
-
-  deletePayment(request: DeletePaymentRequest): Observable<DeletePaymentResponse>;
-
-  listPayments(request: ListPaymentsRequest): Observable<ListPaymentsResponse>;
-
-  filterPayments(request: FilterPaymentsRequest): Observable<FilterPaymentsResponse>;
-
   createTicket(request: CreateTicketRequest): Observable<CreateTicketResponse>;
 
   getTicket(request: GetTicketRequest): Observable<GetTicketResponse>;
@@ -323,30 +238,6 @@ export interface BookingServiceController {
     request: FilterBookingsRequest,
   ): Promise<FilterBookingsResponse> | Observable<FilterBookingsResponse> | FilterBookingsResponse;
 
-  createPayment(
-    request: CreatePaymentRequest,
-  ): Promise<CreatePaymentResponse> | Observable<CreatePaymentResponse> | CreatePaymentResponse;
-
-  getPayment(
-    request: GetPaymentRequest,
-  ): Promise<GetPaymentResponse> | Observable<GetPaymentResponse> | GetPaymentResponse;
-
-  updatePayment(
-    request: UpdatePaymentRequest,
-  ): Promise<UpdatePaymentResponse> | Observable<UpdatePaymentResponse> | UpdatePaymentResponse;
-
-  deletePayment(
-    request: DeletePaymentRequest,
-  ): Promise<DeletePaymentResponse> | Observable<DeletePaymentResponse> | DeletePaymentResponse;
-
-  listPayments(
-    request: ListPaymentsRequest,
-  ): Promise<ListPaymentsResponse> | Observable<ListPaymentsResponse> | ListPaymentsResponse;
-
-  filterPayments(
-    request: FilterPaymentsRequest,
-  ): Promise<FilterPaymentsResponse> | Observable<FilterPaymentsResponse> | FilterPaymentsResponse;
-
   createTicket(
     request: CreateTicketRequest,
   ): Promise<CreateTicketResponse> | Observable<CreateTicketResponse> | CreateTicketResponse;
@@ -379,12 +270,6 @@ export function BookingServiceControllerMethods() {
       "deleteBooking",
       "listBookings",
       "filterBookings",
-      "createPayment",
-      "getPayment",
-      "updatePayment",
-      "deletePayment",
-      "listPayments",
-      "filterPayments",
       "createTicket",
       "getTicket",
       "updateTicket",

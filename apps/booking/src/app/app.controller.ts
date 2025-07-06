@@ -15,18 +15,6 @@ import {
     ListBookingsResponse,
     FilterBookingsRequest,
     FilterBookingsResponse,
-    CreatePaymentRequest,
-    CreatePaymentResponse,
-    GetPaymentRequest,
-    GetPaymentResponse,
-    UpdatePaymentRequest,
-    UpdatePaymentResponse,
-    DeletePaymentRequest,
-    DeletePaymentResponse,
-    ListPaymentsRequest,
-    ListPaymentsResponse,
-    FilterPaymentsRequest,
-    FilterPaymentsResponse,
     CreateTicketRequest,
     CreateTicketResponse,
     GetTicketRequest,
@@ -47,7 +35,7 @@ import { Observable } from 'rxjs';
 export class AppController implements BookingServiceController {
   constructor(private readonly appService: AppService) {}
 
-  // Booking RPCs
+
   createBooking(request: CreateBookingRequest): Promise<CreateBookingResponse> | Observable<CreateBookingResponse> | CreateBookingResponse {
     return this.appService.createBooking(request);
   }
@@ -72,32 +60,7 @@ export class AppController implements BookingServiceController {
     return this.appService.filterBookings(request);
   }
 
-  // Payment RPCs
-  createPayment(request: CreatePaymentRequest): Promise<CreatePaymentResponse> | Observable<CreatePaymentResponse> | CreatePaymentResponse {
-    return this.appService.createPayment(request);
-  }
 
-  getPayment(request: GetPaymentRequest): Promise<GetPaymentResponse> | Observable<GetPaymentResponse> | GetPaymentResponse {
-    return this.appService.getPayment(request);
-  }
-
-  updatePayment(request: UpdatePaymentRequest): Promise<UpdatePaymentResponse> | Observable<UpdatePaymentResponse> | UpdatePaymentResponse {
-    return this.appService.updatePayment(request);
-  }
-
-  deletePayment(request: DeletePaymentRequest): Promise<DeletePaymentResponse> | Observable<DeletePaymentResponse> | DeletePaymentResponse {
-    return this.appService.deletePayment(request);
-  }
-
-  listPayments(request: ListPaymentsRequest): Promise<ListPaymentsResponse> | Observable<ListPaymentsResponse> | ListPaymentsResponse {
-    return this.appService.listPayments(request);
-  }
-
-  filterPayments(request: FilterPaymentsRequest): Promise<FilterPaymentsResponse> | Observable<FilterPaymentsResponse> | FilterPaymentsResponse {
-    return this.appService.filterPayments(request);
-  }
-
-  // Ticket RPCs
   createTicket(request: CreateTicketRequest): Promise<CreateTicketResponse> | Observable<CreateTicketResponse> | CreateTicketResponse {
     return this.appService.createTicket(request);
   }
@@ -120,10 +83,5 @@ export class AppController implements BookingServiceController {
 
   filterTickets(request: FilterTicketsRequest): Promise<FilterTicketsResponse> | Observable<FilterTicketsResponse> | FilterTicketsResponse {
     return this.appService.filterTickets(request);
-  }
-
-  @Get()
-  getData() {
-    return this.appService.getData();
   }
 }

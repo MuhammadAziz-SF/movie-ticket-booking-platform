@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule } from '@nestjs/microservices';
-import { AUTH_PACKAGE_NAME } from 'types/proto/auth';
+import { AUTH_PACKAGE_NAME } from '@app/types/proto/auth';
 import { Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { AuthController } from './auth/auth.controller';
-import { CINEMA_PACKAGE_NAME } from 'types/proto/cinema';
+import { CINEMA_PACKAGE_NAME } from '@app/types/proto/cinema';
 import { CinemaController } from './cinema/cinema.controller';
-
+import { BookingController } from './booking/booking.controller';
+import { BOOKING_PACKAGE_NAME } from '@app/types/proto/booking';
 
 @Module({
   imports: [
@@ -19,7 +20,10 @@ import { CinemaController } from './cinema/cinema.controller';
         options: {
           url: 'localhost:50051',
           package: AUTH_PACKAGE_NAME,
-          protoPath: join(__dirname, 'proto/auth.proto'),
+          protoPath: join(__dirname, 'assets/proto/auth.proto'),
+          loader: {
+            includeDirs: [join(__dirname, 'assets/proto')],
+          },
         },
       },
     ]),
@@ -30,12 +34,34 @@ import { CinemaController } from './cinema/cinema.controller';
         options: {
           url: 'localhost:50052',
           package: CINEMA_PACKAGE_NAME,
-          protoPath: join(__dirname, 'proto/cinema.proto'),
+          protoPath: join(__dirname, 'assets/proto/cinema.proto'),
+          loader: {
+            includeDirs: [join(__dirname, 'assets/proto')],
+          },
+        },
+      },
+    ]),
+    ClientsModule.register([
+      {
+        name: BOOKING_PACKAGE_NAME,
+        transport: Transport.GRPC,
+        options: {
+          url: 'localhost:50053',
+          package: BOOKING_PACKAGE_NAME,
+          protoPath: join(__dirname, 'assets/proto/booking.proto'),
+          loader: {
+            includeDirs: [join(__dirname, 'assets/proto')],
+          },
         },
       },
     ]),
   ],
-  controllers: [AppController, AuthController, CinemaController],
+  controllers: [
+    AppController,
+    AuthController,
+    CinemaController,
+    BookingController,
+  ],
   providers: [AppService],
 })
 export class AppModule {}

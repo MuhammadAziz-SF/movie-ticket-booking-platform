@@ -30,16 +30,6 @@ message StatusResponse {
 }
 
 
-message Payment {
-  string id = 1;
-  int32 amount = 2;
-  string paymentMethod = 3;
-  optional string transactionId = 4;
-  PaymentStatus status = 5;
-  string bookingId = 6;
-  string createdAt = 7;
-  string updatedAt = 8;
-}
 
 message Ticket {
   string id = 1;
@@ -69,11 +59,7 @@ message BookingFilter {
   optional string showtimeId = 3;
 }
 
-message PaymentFilter {
-  optional string bookingId = 1;
-  optional PaymentStatus status = 2;
-  optional string paymentMethod = 3;
-}
+
 
 message TicketFilter {
   optional string bookingId = 1;
@@ -135,57 +121,6 @@ message FilterBookingsResponse {
 }
 
 
-message CreatePaymentRequest {
-  Payment payment = 1;
-}
-message CreatePaymentResponse {
-  Payment payment = 1;
-}
-
-message GetPaymentRequest {
-  string id = 1;
-}
-message GetPaymentResponse {
-  Payment payment = 1;
-}
-
-message UpdatePaymentRequest {
-  string id = 1;
-  optional double amount = 2;
-  optional string transactionId = 3;
-  optional PaymentStatus status = 4;
-}
-message UpdatePaymentResponse {
-  Payment payment = 1;
-}
-
-message DeletePaymentRequest {
-  string id = 1;
-}
-message DeletePaymentResponse {
-  StatusResponse result = 1;
-}
-
-message ListPaymentsRequest {
-  Pagination pagination = 1;
-  Sort sort = 2;
-}
-message ListPaymentsResponse {
-  repeated Payment payments = 1;
-  int32 total = 2;
-}
-
-message FilterPaymentsRequest {
-  PaymentFilter filter = 1;
-  Pagination pagination = 2;
-  Sort sort = 3;
-}
-message FilterPaymentsResponse {
-  repeated Payment payments = 1;
-  int32 total = 2;
-}
-
-
 message CreateTicketRequest {
   Ticket ticket = 1;
 }
@@ -202,7 +137,7 @@ message GetTicketResponse {
 
 message UpdateTicketRequest {
   string id = 1;
-  optional double price = 2;
+  optional int32 price = 2;
   optional string seatId = 3;
 }
 message UpdateTicketResponse {
@@ -245,14 +180,6 @@ service BookingService {
   rpc DeleteBooking(DeleteBookingRequest) returns (DeleteBookingResponse);
   rpc ListBookings(ListBookingsRequest) returns (ListBookingsResponse);
   rpc FilterBookings(FilterBookingsRequest) returns (FilterBookingsResponse);
-
-
-  rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
-  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
-  rpc UpdatePayment(UpdatePaymentRequest) returns (UpdatePaymentResponse);
-  rpc DeletePayment(DeletePaymentRequest) returns (DeletePaymentResponse);
-  rpc ListPayments(ListPaymentsRequest) returns (ListPaymentsResponse);
-  rpc FilterPayments(FilterPaymentsRequest) returns (FilterPaymentsResponse);
 
   rpc CreateTicket(CreateTicketRequest) returns (CreateTicketResponse);
   rpc GetTicket(GetTicketRequest) returns (GetTicketResponse);
