@@ -2,13 +2,16 @@
 CREATE TYPE "UserRole" AS ENUM ('admin', 'super_admin', 'user');
 
 -- CreateEnum
-CREATE TYPE "SeatType" AS ENUM ('STANDARD');
+CREATE TYPE "SeatType" AS ENUM ('STANDARD', 'VIP', 'V_VIP');
 
 -- CreateEnum
-CREATE TYPE "BookingStatus" AS ENUM ('PENDING');
+CREATE TYPE "BookingStatus" AS ENUM ('B_PENDING', 'B_CONFIRMED', 'B_CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'completed', 'cancelled');
+CREATE TYPE "PaymentStatus" AS ENUM ('P_PENDING', 'P_SUCCESS', 'P_FAILED');
+
+-- CreateEnum
+CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- CreateTable
 CREATE TABLE "Admin" (
@@ -17,6 +20,7 @@ CREATE TABLE "Admin" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
+    "status" "UserStatus" NOT NULL,
     "role" "UserRole" NOT NULL DEFAULT 'admin',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -31,6 +35,7 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "fullName" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
+    "status" "UserStatus" NOT NULL DEFAULT 'INACTIVE',
     "role" "UserRole" NOT NULL DEFAULT 'user',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -67,6 +72,7 @@ CREATE TABLE "Seat" (
     "id" TEXT NOT NULL,
     "row" TEXT NOT NULL,
     "number" INTEGER NOT NULL,
+    "price" INTEGER NOT NULL,
     "type" "SeatType" NOT NULL DEFAULT 'STANDARD',
     "screenId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -83,8 +89,6 @@ CREATE TABLE "Movie" (
     "releaseDate" TIMESTAMP(3) NOT NULL,
     "durationInMinutes" INTEGER NOT NULL,
     "posterUrl" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Movie_pkey" PRIMARY KEY ("id")
 );
@@ -93,7 +97,7 @@ CREATE TABLE "Movie" (
 CREATE TABLE "Showtime" (
     "id" TEXT NOT NULL,
     "startTime" TIMESTAMP(3) NOT NULL,
-    "basePrice" DECIMAL(10,2) NOT NULL,
+    "basePrice" INTEGER NOT NULL,
     "movieId" TEXT NOT NULL,
     "screenId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -105,11 +109,12 @@ CREATE TABLE "Showtime" (
 -- CreateTable
 CREATE TABLE "Booking" (
     "id" TEXT NOT NULL,
-    "status" "BookingStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "BookingStatus" NOT NULL DEFAULT 'B_PENDING',
     "totalAmount" DECIMAL(10,2) NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "showtimeId" TEXT NOT NULL,
+    "seatsId" TEXT[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -131,10 +136,10 @@ CREATE TABLE "Ticket" (
 -- CreateTable
 CREATE TABLE "Payment" (
     "id" TEXT NOT NULL,
-    "amount" DECIMAL(8,2) NOT NULL,
+    "amount" INTEGER NOT NULL,
     "paymentMethod" TEXT NOT NULL,
     "transactionId" TEXT NOT NULL,
-    "status" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "PaymentStatus" NOT NULL DEFAULT 'P_PENDING',
     "bookingId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

@@ -133,7 +133,7 @@ export interface UserLoginRes {
 }
 
 export interface UserConfirmLoginReq {
-  otp: string;
+  otp: number;
   email: string;
 }
 
@@ -144,7 +144,7 @@ export interface UserConfirmLoginRes {
 
 export interface UserConfirmSignUpReq {
   email: string;
-  otp: string;
+  otp: number;
 }
 
 export interface UserConfirmSignUpRes {

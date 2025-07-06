@@ -17,8 +17,8 @@
     "paths": {
       "@app/api-gateway/*": ["apps/api-gateway/src/app/*"],
       "@app/auth/*": ["apps/auth/src/app/*"],
-      "@app/types/*": ["./types/*"],
-      "@app/common/*": ["apps/common/*"]
+      "@app/common/*": ["apps/common/*"],
+      "@app/types/*": ["./types/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

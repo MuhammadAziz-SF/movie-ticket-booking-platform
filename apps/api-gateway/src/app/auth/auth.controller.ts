@@ -1,131 +1,119 @@
-import { Body, Controller, Inject, OnModuleInit, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  OnModuleInit,
+  Post,
+} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
-
 import {
   AUTH_PACKAGE_NAME,
   AUTH_SERVICE_NAME,
-  AuthServiceClient,
+  AuthServiceController,
   CreateAdminReq,
-  CreateAdminRes,
   AdminLoginReq,
-  AdminLoginRes,
   AdminConfirmLoginReq,
-  AdminConfirmLoginRes,
-  AdminLogoutRes,
   AdminFindAllReq,
-  AdminFindAllRes,
-  AdminFindOneReq,
-  AdminFindOneRes,
   AdminUpdateReq,
-  AdminUpdateRes,
   AdminDeleteReq,
-  AdminDeleteRes,
   SignUpUserReq,
-  SignUpUserRes,
   UserLoginReq,
-  UserLoginRes,
   UserConfirmLoginReq,
-  UserConfirmLoginRes,
   UserConfirmSignUpReq,
-  UserConfirmSignUpRes,
   UserUpdateReq,
-  UserUpdateRes,
   UserDeleteReq,
-  UserDeleteRes,
   UserFindAllReq,
-  UserFindAllRes,
+  AdminFindOneReq,
   UserFindOneReq,
-  UserFindOneRes,
 } from 'types/proto/auth';
 
 @Controller('auth')
 export class AuthController implements OnModuleInit {
-  private authService: AuthServiceClient;
+  private authService: AuthServiceController;
 
   constructor(@Inject(AUTH_PACKAGE_NAME) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.authService = this.client.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
+    this.authService = this.client.getService<AuthServiceController>(AUTH_SERVICE_NAME);
   }
 
-  @Post('create-admin')
-  createAdmin(@Body() body: CreateAdminReq): Observable<CreateAdminRes> {
+  @Post('admin/create')
+  createAdmin(@Body() body: CreateAdminReq) {
     return this.authService.createAdmin(body);
   }
 
-  @Post('admin-login')
-  adminLogin(@Body() body: AdminLoginReq): Observable<AdminLoginRes> {
+  @Post('admin/login')
+  adminLogin(@Body() body: AdminLoginReq) {
     return this.authService.adminLogin(body);
   }
 
-  @Post('admin-confirm-login')
-  adminConfirmLogin(@Body() body: AdminConfirmLoginReq): Observable<AdminConfirmLoginRes> {
+  @Post('admin/login/confirm')
+  adminConfirmLogin(@Body() body: AdminConfirmLoginReq) {
     return this.authService.adminConfirmLogin(body);
   }
 
-  @Post('admin-logout')
-  adminLogout(): Observable<AdminLogoutRes> {
+  @Post('admin/logout')
+  adminLogout() {
     return this.authService.adminLogout({});
   }
 
-  @Post('admin-find-all')
-  adminFindAll(@Body() body: AdminFindAllReq): Observable<AdminFindAllRes> {
+  @Post('admin/find-all')
+  adminFindAll(@Body() body: AdminFindAllReq) {
     return this.authService.adminFindAll(body);
   }
 
-  @Post('admin-find-one')
-  adminFindOne(@Body() body: AdminFindOneReq): Observable<AdminFindOneRes> {
+  @Post('admin/find-one')
+  adminFindOne(@Body() body: AdminFindOneReq) {
     return this.authService.adminFindOne(body);
   }
 
-  @Post('admin-update')
-  adminUpdate(@Body() body: AdminUpdateReq): Observable<AdminUpdateRes> {
+  @Post('admin/update')
+  adminUpdate(@Body() body: AdminUpdateReq) {
     return this.authService.adminUpdate(body);
   }
 
-  @Post('admin-delete')
-  adminDelete(@Body() body: AdminDeleteReq): Observable<AdminDeleteRes> {
+  @Post('admin/delete')
+  adminDelete(@Body() body: AdminDeleteReq) {
     return this.authService.adminDelete(body);
   }
 
-  @Post('user-signup')
-  signUpUser(@Body() body: SignUpUserReq): Observable<SignUpUserRes> {
+  @Post('user/signup')
+  signUpUser(@Body() body: SignUpUserReq) {
     return this.authService.signUpUser(body);
   }
 
-  @Post('user-login')
-  userLogin(@Body() body: UserLoginReq): Observable<UserLoginRes> {
-    return this.authService.userLogin(body);
-  }
-
-  @Post('user-confirm-login')
-  userConfirmLogin(@Body() body: UserConfirmLoginReq): Observable<UserConfirmLoginRes> {
-    return this.authService.userConfirmLogin(body);
-  }
-
-  @Post('user-confirm-signup')
-  userConfirmSignUp(@Body() body: UserConfirmSignUpReq): Observable<UserConfirmSignUpRes> {
+  @Post('user/signup/confirm')
+  userConfirmSignUp(@Body() body: UserConfirmSignUpReq) {
     return this.authService.userConfirmSignUp(body);
   }
 
-  @Post('user-update')
-  userUpdate(@Body() body: UserUpdateReq): Observable<UserUpdateRes> {
+  @Post('user/login')
+  userLogin(@Body() body: UserLoginReq) {
+    return this.authService.userLogin(body);
+  }
+
+  @Post('user/login/confirm')
+  userConfirmLogin(@Body() body: UserConfirmLoginReq) {
+    return this.authService.userConfirmLogin(body);
+  }
+
+  @Post('user/update')
+  userUpdate(@Body() body: UserUpdateReq) {
     return this.authService.userUpdate(body);
   }
 
-  @Post('user-delete')
-  userDelete(@Body() body: UserDeleteReq): Observable<UserDeleteRes> {
+  @Post('user/delete')
+  userDelete(@Body() body: UserDeleteReq) {
     return this.authService.userDelete(body);
   }
 
-  @Post('user-find-all')
-  userFindAll(@Body() body: UserFindAllReq): Observable<UserFindAllRes> {
+  @Post('user/find-all')
+  userFindAll(@Body() body: UserFindAllReq) {
     return this.authService.userFindAll(body);
   }
 
-  @Post('user-find-one')
-  userFindOne(@Body() body: UserFindOneReq): Observable<UserFindOneRes> {
+  @Post('user/find-one')
+  userFindOne(@Body() body: UserFindOneReq) {
     return this.authService.userFindOne(body);
   }
 }

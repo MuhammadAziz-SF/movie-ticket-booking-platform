@@ -1,0 +1,263 @@
+syntax = "proto3";
+
+package booking;
+
+enum BookingStatus {
+  B_PENDING = 0;
+  B_CONFIRMED = 1;
+  B_CANCELLED = 2;
+}
+
+enum PaymentStatus {
+  P_PENDING = 0;
+  P_SUCCESS = 1;
+  P_FAILED = 2;
+}
+
+message Pagination {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message Sort {
+  string sortBy = 1;
+  string order = 2; 
+}
+
+message StatusResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+
+message Payment {
+  string id = 1;
+  int32 amount = 2;
+  string paymentMethod = 3;
+  optional string transactionId = 4;
+  PaymentStatus status = 5;
+  string bookingId = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}
+
+message Ticket {
+  string id = 1;
+  double price = 2;
+  string bookingId = 3;
+  string seatId = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+message Booking {
+  string id = 1;
+  BookingStatus status = 2;
+  double totalAmount = 3;
+  string expiresAt = 4;
+  string userId = 5;
+  string showtimeId = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}
+
+
+
+message BookingFilter {
+  optional string userId = 1;
+  optional BookingStatus status = 2;
+  optional string showtimeId = 3;
+}
+
+message PaymentFilter {
+  optional string bookingId = 1;
+  optional PaymentStatus status = 2;
+  optional string paymentMethod = 3;
+}
+
+message TicketFilter {
+  optional string bookingId = 1;
+  optional string seatId = 2;
+}
+
+message CreateBookingRequest {
+  string userId = 1;
+  string showtimeId = 2;
+  double totalAmount = 3;
+  string expiresAt = 4;
+  repeated string seatsId = 5;
+}
+message CreateBookingResponse {
+  Booking booking = 1;
+}
+
+message GetBookingRequest {
+  string id = 1;
+}
+message GetBookingResponse {
+  Booking booking = 1;
+}
+
+message UpdateBookingRequest {
+  string id = 1;
+  optional BookingStatus status = 2;
+  optional double totalAmount = 3;
+  optional string expiresAt = 4;
+}
+message UpdateBookingResponse {
+  Booking booking = 1;
+}
+
+message DeleteBookingRequest {
+  string id = 1;
+}
+message DeleteBookingResponse {
+  StatusResponse result = 1;
+}
+
+message ListBookingsRequest {
+  Pagination pagination = 1;
+  Sort sort = 2;
+}
+message ListBookingsResponse {
+  repeated Booking bookings = 1;
+  int32 total = 2;
+}
+
+message FilterBookingsRequest {
+  BookingFilter filter = 1;
+  Pagination pagination = 2;
+  Sort sort = 3;
+}
+message FilterBookingsResponse {
+  repeated Booking bookings = 1;
+  int32 total = 2;
+}
+
+
+message CreatePaymentRequest {
+  Payment payment = 1;
+}
+message CreatePaymentResponse {
+  Payment payment = 1;
+}
+
+message GetPaymentRequest {
+  string id = 1;
+}
+message GetPaymentResponse {
+  Payment payment = 1;
+}
+
+message UpdatePaymentRequest {
+  string id = 1;
+  optional double amount = 2;
+  optional string transactionId = 3;
+  optional PaymentStatus status = 4;
+}
+message UpdatePaymentResponse {
+  Payment payment = 1;
+}
+
+message DeletePaymentRequest {
+  string id = 1;
+}
+message DeletePaymentResponse {
+  StatusResponse result = 1;
+}
+
+message ListPaymentsRequest {
+  Pagination pagination = 1;
+  Sort sort = 2;
+}
+message ListPaymentsResponse {
+  repeated Payment payments = 1;
+  int32 total = 2;
+}
+
+message FilterPaymentsRequest {
+  PaymentFilter filter = 1;
+  Pagination pagination = 2;
+  Sort sort = 3;
+}
+message FilterPaymentsResponse {
+  repeated Payment payments = 1;
+  int32 total = 2;
+}
+
+
+message CreateTicketRequest {
+  Ticket ticket = 1;
+}
+message CreateTicketResponse {
+  Ticket ticket = 1;
+}
+
+message GetTicketRequest {
+  string id = 1;
+}
+message GetTicketResponse {
+  Ticket ticket = 1;
+}
+
+message UpdateTicketRequest {
+  string id = 1;
+  optional double price = 2;
+  optional string seatId = 3;
+}
+message UpdateTicketResponse {
+  Ticket ticket = 1;
+}
+
+message DeleteTicketRequest {
+  string id = 1;
+}
+message DeleteTicketResponse {
+  StatusResponse result = 1;
+}
+
+message ListTicketsRequest {
+  Pagination pagination = 1;
+  Sort sort = 2;
+}
+message ListTicketsResponse {
+  repeated Ticket tickets = 1;
+  int32 total = 2;
+}
+
+message FilterTicketsRequest {
+  TicketFilter filter = 1;
+  Pagination pagination = 2;
+  Sort sort = 3;
+}
+message FilterTicketsResponse {
+  repeated Ticket tickets = 1;
+  int32 total = 2;
+}
+
+
+
+service BookingService {
+
+  rpc CreateBooking(CreateBookingRequest) returns (CreateBookingResponse);
+  rpc GetBooking(GetBookingRequest) returns (GetBookingResponse);
+  rpc UpdateBooking(UpdateBookingRequest) returns (UpdateBookingResponse);
+  rpc DeleteBooking(DeleteBookingRequest) returns (DeleteBookingResponse);
+  rpc ListBookings(ListBookingsRequest) returns (ListBookingsResponse);
+  rpc FilterBookings(FilterBookingsRequest) returns (FilterBookingsResponse);
+
+
+  rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
+  rpc GetPayment(GetPaymentRequest) returns (GetPaymentResponse);
+  rpc UpdatePayment(UpdatePaymentRequest) returns (UpdatePaymentResponse);
+  rpc DeletePayment(DeletePaymentRequest) returns (DeletePaymentResponse);
+  rpc ListPayments(ListPaymentsRequest) returns (ListPaymentsResponse);
+  rpc FilterPayments(FilterPaymentsRequest) returns (FilterPaymentsResponse);
+
+  rpc CreateTicket(CreateTicketRequest) returns (CreateTicketResponse);
+  rpc GetTicket(GetTicketRequest) returns (GetTicketResponse);
+  rpc UpdateTicket(UpdateTicketRequest) returns (UpdateTicketResponse);
+  rpc DeleteTicket(DeleteTicketRequest) returns (DeleteTicketResponse);
+  rpc ListTickets(ListTicketsRequest) returns (ListTicketsResponse);
+  rpc FilterTickets(FilterTicketsRequest) returns (FilterTicketsResponse);
+}

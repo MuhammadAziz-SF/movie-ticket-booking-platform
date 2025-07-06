@@ -41,19 +41,31 @@
       "exclude": [
         "apps/api-gateway-e2e/**/*",
         "apps/admins-e2e/**/*",
-        "apps/auth-e2e/**/*"
+        "apps/auth-e2e/**/*",
+        "apps/cinema-e2e/**/*",
+        "apps/booking-e2e/**/*",
+        "apps/booking-e2e/**/*"
       ]
     }
   ],
-
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "useDaemonProcess": true
+      }
+    }
+  },
   "targetDefaults": {
     "build": {
       "options": {
-        "assets": [{
-          "glob": "*.proto",
-          "input": "proto",
-          "output": "proto"
-      }]
+        "assets": [
+          {
+            "glob": "*.proto",
+            "input": "proto",
+            "output": "proto"
+          }
+        ]
       }
     }
   }

@@ -1,0 +1,220 @@
+syntax = "proto3";
+
+package cinema;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service CinemaService {
+  rpc CreateMovie(CreateMovieRequest) returns (Movie);
+  rpc GetMovie(GetMovieRequest) returns (Movie);
+  rpc ListMovies(ListMoviesRequest) returns (ListMoviesResponse);
+  rpc UpdateMovie(UpdateMovieRequest) returns (Movie);
+  rpc DeleteMovie(DeleteMovieRequest) returns (google.protobuf.Empty);
+
+  rpc CreateTheater(CreateTheaterRequest) returns (Theater);
+  rpc GetTheater(GetTheaterRequest) returns (Theater);
+  rpc ListTheaters(ListTheatersRequest) returns (ListTheatersResponse);
+  rpc UpdateTheater(UpdateTheaterRequest) returns (Theater);
+  rpc DeleteTheater(DeleteTheaterRequest) returns (google.protobuf.Empty);
+
+  rpc CreateScreen(CreateScreenRequest) returns (Screen);
+  rpc GetScreen(GetScreenRequest) returns (Screen);
+  rpc ListScreensByTheater(ListScreensByTheaterRequest) returns (ListScreensResponse);
+  rpc UpdateScreen(UpdateScreenRequest) returns (Screen);
+  rpc DeleteScreen(DeleteScreenRequest) returns (google.protobuf.Empty);
+
+  rpc CreateShowTime(CreateShowTimeRequest) returns (Showtime);
+  rpc GetShowTime(GetShowTimeRequest) returns (Showtime);
+  rpc ListShowTimes(ListShowTimesRequest) returns (ListShowTimesResponse);
+  rpc UpdateShowTime(UpdateShowTimeRequest) returns (Showtime);
+  rpc DeleteShowTime(DeleteShowTimeRequest) returns (google.protobuf.Empty);
+
+  rpc GetShowtimeSeats(GetShowtimeSeatsRequest) returns (GetShowtimeSeatsResponse);
+  rpc CheckSeatsAvailability(CheckSeatsAvailabilityRequest) returns (CheckSeatsAvailabilityResponse);
+}
+
+message Movie {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  google.protobuf.Timestamp releaseDate = 4;
+  int32 durationInMinutes = 5;
+  string posterUrl = 6;
+}
+
+message Theater {
+  string id = 1;
+  string name = 2;
+  string address = 3;
+  string city = 4;
+  repeated Screen screens = 5;
+}
+
+message Screen {
+  string id = 1;
+  string name = 2;
+  int32 capacity = 3;
+  string theaterId = 4;
+  repeated Seat seats = 5;
+}
+
+message Showtime {
+  string id = 1;
+  google.protobuf.Timestamp startTime = 2;
+  int32 basePrice = 3;
+  string movieId = 4;
+  string screenId = 5;
+}
+
+message Seat {
+  string id = 1;
+  string row = 2;
+  int32 number = 3;
+  string type = 4;
+  string screenId = 5;
+}
+
+message ShowtimeSeat {
+    Seat seat_info = 1;
+    bool is_available = 2;
+}
+
+message CreateMovieRequest {
+  string title = 1;
+  string description = 2;
+  google.protobuf.Timestamp releaseDate = 3;
+  int32 durationInMinutes = 4;
+  string posterUrl = 5;
+}
+
+message GetMovieRequest {
+  string id = 1;
+}
+
+message ListMoviesRequest {
+  google.protobuf.Empty filter = 1;
+}
+
+message ListMoviesResponse {
+  repeated Movie movies = 1;
+}
+
+message UpdateMovieRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string description = 3;
+  optional google.protobuf.Timestamp releaseDate = 4;
+  optional int32 durationInMinutes = 5;
+  optional string posterUrl = 6;
+}
+
+message DeleteMovieRequest {
+  string id = 1;
+}
+
+message CreateTheaterRequest {
+  string name = 1;
+  string address = 2;
+  string city = 3;
+}
+
+message GetTheaterRequest {
+  string id = 1;
+}
+
+message ListTheatersRequest {
+  optional string city = 1;
+}
+
+message ListTheatersResponse {
+  repeated Theater theaters = 1;
+}
+
+message UpdateTheaterRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string address = 3;
+  optional string city = 4;
+}
+
+message DeleteTheaterRequest {
+  string id = 1;
+}
+
+message CreateScreenRequest {
+  string name = 1;
+  int32 capacity = 2;
+  string theaterId = 3;
+}
+
+message GetScreenRequest {
+  string id = 1;
+}
+
+message ListScreensByTheaterRequest {
+  string theaterId = 1;
+}
+
+message ListScreensResponse {
+  repeated Screen screens = 1;
+}
+
+message UpdateScreenRequest {
+  string id = 1;
+  optional string name = 2;
+  optional int32 capacity = 3;
+}
+
+message DeleteScreenRequest {
+  string id = 1;
+}
+
+message CreateShowTimeRequest {
+  google.protobuf.Timestamp startTime = 1;
+  int32 basePrice = 2;
+  string movieId = 3;
+  string screenId = 4;
+}
+
+message GetShowTimeRequest {
+  string id = 1;
+}
+
+message ListShowTimesRequest {
+  optional string movieId = 1;
+  optional string theaterId = 2;
+  optional string date = 3;
+}
+
+message ListShowTimesResponse {
+  repeated Showtime showTimes = 1;
+}
+
+message UpdateShowTimeRequest {
+  string id = 1;
+  optional google.protobuf.Timestamp startTime = 2;
+  optional int32 basePrice = 3;
+}
+
+message DeleteShowTimeRequest {
+  string id = 1;
+}
+
+message GetShowtimeSeatsRequest {
+  string showtimeId = 1;
+}
+
+message GetShowtimeSeatsResponse {
+  repeated ShowtimeSeat seats = 1;
+}
+
+message CheckSeatsAvailabilityRequest {
+    string showtimeId = 1;
+    repeated string seatIds = 2;
+}
+
+message CheckSeatsAvailabilityResponse {
+    bool are_available = 1;
+    repeated string unavailable_seat_ids = 2;
+}

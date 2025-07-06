@@ -21,11 +21,10 @@ const metadata = new grpc.Metadata();
 @Injectable()
 export class AuthService implements OnModuleInit {
   constructor(
-    @Inject(CACHE_MANAGER)
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly prisma: PrismaService,
     private readonly jwtService: TokenService,
     private readonly mailService: MailService,
-    private readonly cacheManager: Cache
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -41,7 +40,8 @@ export class AuthService implements OnModuleInit {
           email: config.ADMIN_EMAIL,
           password: hashedPassword,
           phone: '9988899889',
-          role: UserRoles.SUPER_ADMIN
+          role: UserRoles.SUPER_ADMIN,
+          status: 'ACTIVE'
         }});
       }
     } catch (error) {
@@ -64,7 +64,8 @@ export class AuthService implements OnModuleInit {
         email,
         phone: '99899989988',
         password: hashedPassword,
-        role: UserRoles.ADMIN
+        role: UserRoles.ADMIN,
+        status: 'ACTIVE'
       }})
     } catch (error) {
       return catchError(error)
@@ -277,44 +278,78 @@ export class AuthService implements OnModuleInit {
   }
 
   async userSignUp(req: SignUpUserReq): Promise<SignUpUserRes> {
-    try {
-      const { fullName, email, password } = req;
-      const isUserExists = await this.prisma.user.findUnique({where: {email}});
-      if(isUserExists) {
-        throw new ConflictException('Email already exists!')
-      }
+  try {
+    
+    const { fullName, email, password } = req;
+    const existingUser = await this.prisma.user.findUnique({ where: { email } });
 
-      await this.cacheManager.set(email, {fullName, password}, 300000)
-
+    if(existingUser.status === 'INACTIVE') {
       const otp = generateOTP();
-      await this.mailService.sendOtp(email, otp)
-      await this.cacheManager.set(email, otp, 300000)
-      return {otp: otp, message: `OTP send to email ${email}`}
-    } catch (error) {
-      return catchError(error)
+      await this.cacheManager.set(email, otp, 300000);
+      await this.mailService.sendOtp(email, otp);
+    return { otp: otp,  message: `An OTP has been sent to ${email}. It is valid for 5 minutes.` };
     }
+    if(existingUser) {
+      throw new ConflictException('A user with this email is exists!')
+    }
+
+    const hashedPassword = await encrypt(password);
+    const otp = generateOTP();
+
+    await this.prisma.user.create({
+          data: {
+            fullName,
+            email,
+            password: hashedPassword,
+            phone: '9989998645',
+            status: 'INACTIVE', 
+          },
+        });
+
+      await this.cacheManager.set(email, otp, 300000);
+      await this.mailService.sendOtp(email, otp);
+    return { otp: otp,  message: `An OTP has been sent to ${email}. It is valid for 5 minutes.` };
+
+  } catch (error) {
+    return catchError(error);
   }
-  
+  }
+
   async userConfirmSignUp(req: UserConfirmSignUpReq): Promise<UserConfirmSignUpRes> {
-    try {
-      const { email, otp }  = req;
-      const hasUser = await this.cacheManager.get(email);
-      if(!hasUser || hasUser != otp) {
-        throw new BadRequestException('OTP expired!')
-      }
+  try {
+    const { email, otp } = req;
 
-      await this.cacheManager.del(email);
-
-      const user = await this.prisma.user.findUnique({where: {email}});
-      const payload = {id: user.id, fullName: user.fullName, role: user.role}
-      const accessToken = await this.jwtService.generateAccessToken(payload);
-      const refreshToken = await this.jwtService.generateRefreshToken(payload);
-      writeToCookie(metadata, 'refreshToken', refreshToken)
-
-      return { success: true, message: `accessToken: ${accessToken}`}
-    } catch (error) {
-      return catchError(error)
+    const cachedOtp = await this.cacheManager.get<number>(email);
+    if (!cachedOtp || cachedOtp !== otp) {
+      throw new BadRequestException('Invalid or expired OTP!');
     }
+
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('No pending registration found for this email.');
+    }
+    
+    if (user.status === 'ACTIVE') {
+        throw new ConflictException('This account has already been activated.')
+    }
+
+    const activatedUser = await this.prisma.user.update({
+      where: { email },
+      data: { status: 'ACTIVE' },
+    });
+
+    await this.cacheManager.del(email);
+
+    const payload = { id: activatedUser.id, fullName: activatedUser.fullName, role: activatedUser.role };
+    const accessToken = await this.jwtService.generateAccessToken(payload);
+    const refreshToken = await this.jwtService.generateRefreshToken(payload);
+
+    writeToCookie(metadata, 'refreshToken', refreshToken);
+
+    return { success: true, message: `Account confirmed successfully! accessToken: ${accessToken}`};
+  } catch (error) {
+    return catchError(error);
+  }
   }
 
   async userUpdate(req: UserUpdateReq): Promise<UserUpdateRes> {

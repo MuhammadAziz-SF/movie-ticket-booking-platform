@@ -4,24 +4,24 @@ package auth;
 
 
 service AuthService {
-    rpc CreateAdmin(CreateAdminReq) returns (CreateAdminRes) {}
-    rpc AdminLogin(AdminLoginReq) returns (AdminLoginRes) {}
-    rpc AdminConfirmLogin(AdminConfirmLoginReq) returns (AdminConfirmLoginRes) {}
-    rpc AdminLogout(AdminLogoutReq) returns (AdminLogoutRes) {}
-    rpc AdminFindAll(AdminFindAllReq) returns (AdminFindAllRes) {}
-    rpc AdminFindOne(AdminFindOneReq) returns (AdminFindOneRes) {}
-    rpc AdminUpdate(AdminUpdateReq) returns (AdminUpdateRes) {}
-    rpc AdminDelete(AdminDeleteReq) returns (AdminDeleteRes) {}
+    rpc createAdmin(CreateAdminReq) returns (CreateAdminRes) {}
+    rpc adminLogin(AdminLoginReq) returns (AdminLoginRes) {}
+    rpc adminConfirmLogin(AdminConfirmLoginReq) returns (AdminConfirmLoginRes) {}
+    rpc adminLogout(AdminLogoutReq) returns (AdminLogoutRes) {}
+    rpc adminFindAll(AdminFindAllReq) returns (AdminFindAllRes) {}
+    rpc adminFindOne(AdminFindOneReq) returns (AdminFindOneRes) {}
+    rpc adminUpdate(AdminUpdateReq) returns (AdminUpdateRes) {}
+    rpc adminDelete(AdminDeleteReq) returns (AdminDeleteRes) {}
 
     
-    rpc SignUpUser(SignUpUserReq) returns (SignUpUserRes) {}
-    rpc UserLogin(UserLoginReq) returns (UserLoginRes) {}
-    rpc UserConfirmLogin(UserConfirmLoginReq) returns (UserConfirmLoginRes) {}
-    rpc UserConfirmSignUp(UserConfirmSignUpReq) returns (UserConfirmSignUpRes) {}
-    rpc UserUpdate(UserUpdateReq) returns (UserUpdateRes) {}
-    rpc UserDelete(UserDeleteReq) returns (UserDeleteRes) {}
-    rpc UserFindAll(UserFindAllReq) returns (UserFindAllRes) {}
-    rpc UserFindOne(UserFindOneReq) returns (UserFindOneRes) {}
+    rpc signUpUser(SignUpUserReq) returns (SignUpUserRes) {}
+    rpc userLogin(UserLoginReq) returns (UserLoginRes) {}
+    rpc userConfirmLogin(UserConfirmLoginReq) returns (UserConfirmLoginRes) {}
+    rpc userConfirmSignUp(UserConfirmSignUpReq) returns (UserConfirmSignUpRes) {}
+    rpc userUpdate(UserUpdateReq) returns (UserUpdateRes) {}
+    rpc userDelete(UserDeleteReq) returns (UserDeleteRes) {}
+    rpc userFindAll(UserFindAllReq) returns (UserFindAllRes) {}
+    rpc userFindOne(UserFindOneReq) returns (UserFindOneRes) {}
 }
 
 enum UserRole {
@@ -158,7 +158,7 @@ message UserLoginRes {
 
 
 message UserConfirmLoginReq {
-    string otp = 1;
+    int32 otp = 1;
     string email = 2;
 }
 
@@ -169,7 +169,7 @@ message UserConfirmLoginRes {
 
 message UserConfirmSignUpReq {
     string email = 1;
-    string otp = 2;
+    int32 otp = 2;
 }
 
 message UserConfirmSignUpRes {
