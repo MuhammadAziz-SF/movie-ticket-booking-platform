@@ -89,7 +89,7 @@ export class AuthService implements OnModuleInit {
 
       const otp = generateOTP();
       await this.mailService.sendOtp(email, otp)
-      await this.cacheManager.set(email, otp, 300000)
+      await this.cacheManager.set(email, otp, 30000000)
       return {otp: otp, message: `OTP send to email ${email}`}
     } catch (error) {
       return catchError(error)

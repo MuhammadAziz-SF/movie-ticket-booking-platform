@@ -10,6 +10,7 @@ import { CINEMA_PACKAGE_NAME } from '@app/types/proto/cinema';
 import { CinemaController } from './cinema/cinema.controller';
 import { BookingController } from './booking/booking.controller';
 import { BOOKING_PACKAGE_NAME } from '@app/types/proto/booking';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -62,6 +63,6 @@ import { BOOKING_PACKAGE_NAME } from '@app/types/proto/booking';
     CinemaController,
     BookingController,
   ],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {}
